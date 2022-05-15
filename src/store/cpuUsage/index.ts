@@ -1,14 +1,14 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { fetchCpuStats } from '../../api/cpuStatsQueries';
-import { CPU_FETCHING_STATUS } from './constants';
+import { CPU_FETCHING_STATUS, MAX_LOG_LENGTH } from './constants';
 import { CpuUsageStore } from './types';
 
 const initialState: CpuUsageStore = {
   loadLog: [],
-  currentLoad: 0,
-  averageUsage15minutes: 0,
-  osUptime: 0,
+  currentLoad: undefined,
+  averageUsage15minutes: undefined,
+  osUptime: undefined,
   highLoadAlerts: [],
   fetchingStatus: CPU_FETCHING_STATUS.IDLE
 };
@@ -22,11 +22,7 @@ export const fetchCpuStatsAsync = createAsyncThunk('cpuUsage/fetchCpuStats', asy
 export const cpuUsageSlice = createSlice({
   name: 'cpuUsage',
   initialState,
-  reducers: {
-    addToLog: (state, action: PayloadAction<number>) => {
-      state.loadLog.push(action.payload);
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCpuStatsAsync.pending, (state) => {
@@ -35,11 +31,19 @@ export const cpuUsageSlice = createSlice({
       .addCase(fetchCpuStatsAsync.fulfilled, (state, action) => {
         state.fetchingStatus = CPU_FETCHING_STATUS.IDLE;
 
-        const { currentUsage, averageUsage15min, uptime } = action.payload.data;
+        const { currentUsage, averageUsage15min, uptime, currentTime } = action.payload.data;
 
         state.currentLoad = currentUsage;
         state.averageUsage15minutes = averageUsage15min;
         state.osUptime = uptime;
+
+        const nextLogEntry = { load: currentUsage, time: currentTime };
+        //* This check ensures we don't keep unnecessary log data. The length is calculated from the log interval and the window time view.
+        if (state.loadLog.length >= MAX_LOG_LENGTH) {
+          state.loadLog = [...state.loadLog.slice(1, state.loadLog.length), nextLogEntry];
+        } else {
+          state.loadLog.push(nextLogEntry);
+        }
       })
       .addCase(fetchCpuStatsAsync.rejected, (state) => {
         state.fetchingStatus = CPU_FETCHING_STATUS.FAILED;
@@ -49,7 +53,8 @@ export const cpuUsageSlice = createSlice({
 
 export const cpuUsageReducer = cpuUsageSlice.reducer;
 
-export const { addToLog } = cpuUsageSlice.actions;
+// export const {  } = cpuUsageSlice.actions;
 
 export const selectCurrentLoad = (state: RootState) => state.cpuUsage.currentLoad;
 export const selectIsLoading = (state: RootState) => state.cpuUsage.fetchingStatus === CPU_FETCHING_STATUS.FETCHING;
+export const selectCpuLoadLog = (state: RootState) => state.cpuUsage.loadLog;
