@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { fetchCpuStats } from '../../api/cpuStatsQueries';
-import { CPU_FETCHING_STATUS, MAX_LOG_LENGTH } from './constants';
+import { CPU_FETCHING_STATUS, MIN_LOG_ALERT_LENGTH } from './constants';
+import { reduceAlertMonitoringHandler, reduceCoreStatsHandler, reduceLogEntryHandler } from './handlers';
 import { CpuUsageStore } from './types';
 
 const initialState: CpuUsageStore = {
@@ -9,7 +10,8 @@ const initialState: CpuUsageStore = {
   currentLoad: undefined,
   averageUsage15minutes: undefined,
   osUptime: undefined,
-  highLoadAlerts: [],
+  highLoadAlertsLog: [],
+  currentAlert: undefined,
   fetchingStatus: CPU_FETCHING_STATUS.IDLE
 };
 
@@ -31,18 +33,13 @@ export const cpuUsageSlice = createSlice({
       .addCase(fetchCpuStatsAsync.fulfilled, (state, action) => {
         state.fetchingStatus = CPU_FETCHING_STATUS.IDLE;
 
-        const { currentUsage, averageUsage15min, uptime, currentTime } = action.payload.data;
+        reduceCoreStatsHandler(state, action);
 
-        state.currentLoad = currentUsage;
-        state.averageUsage15minutes = averageUsage15min;
-        state.osUptime = uptime;
+        reduceLogEntryHandler(state, action);
 
-        const nextLogEntry = { load: currentUsage, time: currentTime };
-        //* This check ensures we don't keep unnecessary log data. The length is calculated from the log interval and the window time view.
-        if (state.loadLog.length >= MAX_LOG_LENGTH) {
-          state.loadLog = [...state.loadLog.slice(1, state.loadLog.length), nextLogEntry];
-        } else {
-          state.loadLog.push(nextLogEntry);
+        //* Avoid unnecessary checks of this logic if not enough data collected yet
+        if (state.loadLog.length > MIN_LOG_ALERT_LENGTH) {
+          reduceAlertMonitoringHandler(state, action);
         }
       })
       .addCase(fetchCpuStatsAsync.rejected, (state) => {

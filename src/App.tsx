@@ -1,4 +1,6 @@
+import { SnackbarProvider } from 'notistack';
 import './App.css';
+import NotificationProvider from './components/NotificationProvider';
 import Router from './router/Router';
 
 // TODO - A user should be able to view your application to answer the following questions about their computer:
@@ -19,11 +21,16 @@ import Router from './router/Router';
 // ## Engineering requirements:
 
 // - The alerting logic in your application should have tests.
-// - The back-end service does not need to persist data.
 // - Please write up a small explanation of how you would extend or improve your application design if you were building this for production.
 
 function App() {
-  return <Router />;
+  return (
+    <SnackbarProvider maxSnack={3} preventDuplicate autoHideDuration={10000}>
+      <NotificationProvider>
+        <Router />
+      </NotificationProvider>
+    </SnackbarProvider>
+  );
 }
 
 export default App;
