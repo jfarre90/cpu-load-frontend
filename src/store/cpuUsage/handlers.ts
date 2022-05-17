@@ -15,10 +15,10 @@ export const reduceCoreStatsHandler = (
   draftState: Draft<CpuUsageStore>,
   action: PayloadAction<CpuStatsFetchResponse>
 ): void => {
-  const { currentUsage, averageUsage15min, uptime } = action.payload.data;
+  const { currentUsage, loadAverage, uptime } = action.payload.data;
 
-  draftState.currentLoad = currentUsage;
-  draftState.averageUsage15minutes = averageUsage15min;
+  draftState.currentUsage = currentUsage;
+  draftState.currentLoadAverage = loadAverage;
   draftState.osUptime = uptime;
 };
 
@@ -26,8 +26,8 @@ export const reduceLogEntryHandler = (
   draftState: Draft<CpuUsageStore>,
   action: PayloadAction<CpuStatsFetchResponse>
 ): void => {
-  const { currentUsage, currentTime } = action.payload.data;
-  const nextLogEntry = { load: currentUsage, time: currentTime };
+  const { loadAverage, currentTime } = action.payload.data;
+  const nextLogEntry = { load: loadAverage, time: currentTime };
 
   //* This logic truncates the log data if max graph window is filled, to avoid keeping unnecessary logs
   draftState.loadLog =
@@ -44,6 +44,7 @@ const checkAlert = (
 ) => {
   const { currentTime } = action.payload.data;
 
+  //* Logic filters the log to only include logs withing the windowTime
   const alertLogWindow = draftState.loadLog.filter((logEntry) => {
     const milliseconds = duration(unix(currentTime).diff(unix(logEntry.time))).asMilliseconds();
 
@@ -73,13 +74,7 @@ export const reduceAlertMonitoringHandler = (
   const { currentTime } = action.payload.data;
 
   if (draftState.currentAlert && isCurrentAlertResolved(draftState, action)) {
-    draftState.highLoadAlertsLog.push({
-      ...draftState.currentAlert,
-      status: ALERT_STATUS.RESOLVED,
-      resolvedTime: currentTime
-    });
-
-    draftState.currentAlert = undefined;
+    draftState.currentAlert = { ...draftState.currentAlert, status: ALERT_STATUS.RESOLVED, resolvedTime: currentTime };
   } else if (!draftState.currentAlert && isAlertState(draftState, action)) {
     draftState.currentAlert = { status: ALERT_STATUS.PENDING, time: currentTime };
   }

@@ -6,9 +6,9 @@ import { reduceAlertMonitoringHandler, reduceCoreStatsHandler, reduceLogEntryHan
 import { CpuUsageStore } from './types';
 
 const initialState: CpuUsageStore = {
+  currentUsage: undefined,
+  currentLoadAverage: undefined,
   loadLog: [],
-  currentLoad: undefined,
-  averageUsage15minutes: undefined,
   osUptime: undefined,
   highLoadAlertsLog: [],
   currentAlert: undefined,
@@ -24,7 +24,14 @@ export const fetchCpuStatsAsync = createAsyncThunk('cpuUsage/fetchCpuStats', asy
 export const cpuUsageSlice = createSlice({
   name: 'cpuUsage',
   initialState,
-  reducers: {},
+  reducers: {
+    moveCurrentAlertToLog: (state) => {
+      if (state.currentAlert) {
+        state.highLoadAlertsLog.push(state.currentAlert);
+        state.currentAlert = undefined;
+      }
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCpuStatsAsync.pending, (state) => {
@@ -37,7 +44,7 @@ export const cpuUsageSlice = createSlice({
 
         reduceLogEntryHandler(state, action);
 
-        //* Avoid unnecessary checks of this logic if not enough data collected yet
+        //* This logic ensures we only look for alerts if we have enough log data
         if (state.loadLog.length > MIN_LOG_ALERT_LENGTH) {
           reduceAlertMonitoringHandler(state, action);
         }
@@ -49,9 +56,11 @@ export const cpuUsageSlice = createSlice({
 });
 
 export const cpuUsageReducer = cpuUsageSlice.reducer;
+export const { moveCurrentAlertToLog } = cpuUsageSlice.actions;
 
-// export const {  } = cpuUsageSlice.actions;
-
-export const selectCurrentLoad = (state: RootState) => state.cpuUsage.currentLoad;
+export const selectCurrentUsage = (state: RootState) => state.cpuUsage.currentUsage;
+export const selectCurrentLoadAverage = (state: RootState) => state.cpuUsage.currentLoadAverage;
 export const selectIsLoading = (state: RootState) => state.cpuUsage.fetchingStatus === CPU_FETCHING_STATUS.FETCHING;
 export const selectCpuLoadLog = (state: RootState) => state.cpuUsage.loadLog;
+export const selectCurrentAlert = (state: RootState) => state.cpuUsage.currentAlert;
+export const selectAlertLog = (state: RootState) => state.cpuUsage.highLoadAlertsLog;

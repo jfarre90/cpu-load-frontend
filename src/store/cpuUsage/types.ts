@@ -13,9 +13,9 @@ export type LogEntry = {
 };
 
 export type CpuUsageStore = {
+  currentUsage?: number;
+  currentLoadAverage?: number;
   loadLog: LogEntry[];
-  currentLoad?: number;
-  averageUsage15minutes?: number;
   osUptime?: number;
   currentAlert?: AlertState;
   highLoadAlertsLog: AlertState[];

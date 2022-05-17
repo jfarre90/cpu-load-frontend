@@ -5,6 +5,6 @@ export type API_RESPONSE<T = unknown> = {
 export type CpuStatsFetchResponse = API_RESPONSE<{
   currentUsage: number;
   currentTime: number;
-  averageUsage15min: number;
+  loadAverage: number;
   uptime: number;
 }>;

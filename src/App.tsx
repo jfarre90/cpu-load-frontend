@@ -1,5 +1,6 @@
+import { ThemeProvider, createTheme } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
-import './App.css';
+import { useEffect, useState } from 'react';
 import NotificationProvider from './components/NotificationProvider';
 import Router from './router/Router';
 
@@ -24,12 +25,26 @@ import Router from './router/Router';
 // - Please write up a small explanation of how you would extend or improve your application design if you were building this for production.
 
 function App() {
+  const [darkState, setDarkState] = useState(false);
+  const palletType = darkState ? 'dark' : 'light';
+  const theme = createTheme({
+    palette: {
+      mode: palletType
+    }
+  });
+
+  useEffect(() => {
+    setDarkState(false);
+  }, [darkState]);
+
   return (
-    <SnackbarProvider maxSnack={3} preventDuplicate autoHideDuration={10000}>
-      <NotificationProvider>
-        <Router />
-      </NotificationProvider>
-    </SnackbarProvider>
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3} preventDuplicate autoHideDuration={10000}>
+        <NotificationProvider>
+          <Router />
+        </NotificationProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 }
 
