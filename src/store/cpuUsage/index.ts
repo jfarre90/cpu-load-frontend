@@ -9,7 +9,7 @@ const initialState: CpuUsageStore = {
   currentUsage: undefined,
   currentLoadAverage: undefined,
   loadLog: [],
-  osUptime: undefined,
+  osUptime: 0,
   highLoadAlertsLog: [],
   currentAlert: undefined,
   fetchingStatus: CPU_FETCHING_STATUS.IDLE
@@ -64,3 +64,4 @@ export const selectIsLoading = (state: RootState) => state.cpuUsage.fetchingStat
 export const selectCpuLoadLog = (state: RootState) => state.cpuUsage.loadLog;
 export const selectCurrentAlert = (state: RootState) => state.cpuUsage.currentAlert;
 export const selectAlertLog = (state: RootState) => state.cpuUsage.highLoadAlertsLog;
+export const selectOsUptime = (state: RootState) => state.cpuUsage.osUptime;

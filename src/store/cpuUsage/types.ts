@@ -16,7 +16,7 @@ export type CpuUsageStore = {
   currentUsage?: number;
   currentLoadAverage?: number;
   loadLog: LogEntry[];
-  osUptime?: number;
+  osUptime: number;
   currentAlert?: AlertState;
   highLoadAlertsLog: AlertState[];
   fetchingStatus: ValueOf<CPU_FETCHING_STATUS>;
