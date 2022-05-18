@@ -1,6 +1,5 @@
 import { Action, combineReducers, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { cpuUsageReducer } from './cpuUsage';
-import { logger } from './middleware/logger';
 
 const rootReducer = combineReducers({
   cpuUsage: cpuUsageReducer
@@ -9,7 +8,8 @@ const rootReducer = combineReducers({
 // TODO - consider middleware for checking if alarm needs to be triggered for high load
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  // .concat(logger) //*Used for debugging
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '..';
 import { fetchCpuStats } from '../../api/cpuStatsQueries';
 import { CPU_FETCHING_STATUS, MIN_LOG_ALERT_LENGTH } from './constants';
 import { reduceAlertMonitoringHandler, reduceCoreStatsHandler, reduceLogEntryHandler } from './handlers';
-import { CpuUsageStore } from './types';
+import { AlertState, CpuUsageStore, LogEntry } from './types';
 
 const initialState: CpuUsageStore = {
   currentUsage: undefined,
@@ -30,6 +30,14 @@ export const cpuUsageSlice = createSlice({
         state.highLoadAlertsLog.push(state.currentAlert);
         state.currentAlert = undefined;
       }
+    },
+    addManualAlert: (state, action: PayloadAction<AlertState>) => {
+      if (!state.currentAlert) {
+        state.currentAlert = action.payload;
+      }
+    },
+    addManualLoadLogs: (state, action: PayloadAction<LogEntry[]>) => {
+      state.loadLog.push(...action.payload);
     }
   },
   extraReducers: (builder) => {
@@ -56,7 +64,7 @@ export const cpuUsageSlice = createSlice({
 });
 
 export const cpuUsageReducer = cpuUsageSlice.reducer;
-export const { moveCurrentAlertToLog } = cpuUsageSlice.actions;
+export const { moveCurrentAlertToLog, addManualAlert, addManualLoadLogs } = cpuUsageSlice.actions;
 
 export const selectCurrentUsage = (state: RootState) => state.cpuUsage.currentUsage;
 export const selectCurrentLoadAverage = (state: RootState) => state.cpuUsage.currentLoadAverage;

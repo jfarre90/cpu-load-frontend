@@ -1,3 +1,5 @@
-import { ReactChildren } from "../../shared/types/reactTypes";
+import { ReactChildren } from '../../shared/types/reactTypes';
 
-export type MainLayoutProps = ReactChildren;
+export type MainLayoutProps = ReactChildren & {
+  pageTitle: string;
+};

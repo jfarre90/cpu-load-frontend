@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
 import { useEffect, useState } from 'react';
 import NotificationProvider from './components/NotificationProvider';

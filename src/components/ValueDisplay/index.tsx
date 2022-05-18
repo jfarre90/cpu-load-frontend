@@ -15,7 +15,7 @@ const ValueDisplay: FC<ValueDisplayProps> = ({ value }) => (
       justifyContent: 'center'
     }}
   >
-    <Typography variant='caption' component='div' color='text.primary'>
+    <Typography variant='h5' component='div' color='text.primary'>
       {value}
     </Typography>
   </Box>

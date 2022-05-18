@@ -10,10 +10,20 @@ export const CpuUsageGraph: FC<CpuUsageGraphProps> = () => {
   const currentCpuUsage = useAppSelector(selectCurrentUsage) || 0;
 
   return (
-    <Paper>
-      <Title>CPU Usage</Title>
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <CircularProgressWithLabel label={`${Math.round(currentCpuUsage)}%`} value={currentCpuUsage} size={100} />
+    <Paper sx={{ height: '100%', width: '100%' }}>
+      <Box
+        sx={{
+          height: '100%',
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Title>CPU Usage</Title>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}>
+          <CircularProgressWithLabel label={`${Math.round(currentCpuUsage)}%`} value={currentCpuUsage} size={100} />
+        </Box>
       </Box>
     </Paper>
   );

@@ -1,6 +1,6 @@
-import { Paper } from '@mui/material';
+import { Box, Paper, useTheme } from '@mui/material';
 import { FC } from 'react';
-import { Label, Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Label, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { getTimeFromUnix } from '../../shared/utils/getTimeFromUnix';
 import { selectCpuLoadLog } from '../../store/cpuUsage';
 import { useAppSelector } from '../../store/hooks';
@@ -11,33 +11,43 @@ const LogChart: FC<LogChartProps> = () => {
   const loadLog = useAppSelector(selectCpuLoadLog);
 
   const graphData = loadLog.map((entry) => ({
-    load: entry.load,
+    load: entry.load.toFixed(3),
     time: getTimeFromUnix(entry.time)
   }));
 
-  //TODO - refactor sizing and styling info
+  const theme = useTheme();
+
+  const style = {
+    axisColor: theme.palette.secondary.main,
+    lineColor: theme.palette.success.main
+  };
+
   return (
     <Paper>
-      <Title>CPU Load Monitoring</Title>
-      <ResponsiveContainer aspect={2}>
-        <LineChart
-          data={graphData}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 0,
-            left: 24
-          }}
-        >
-          <XAxis dataKey='time' interval='preserveEnd' stroke={'red'} />
-          <YAxis stroke={'blue'}>
-            <Label angle={270} position='left' style={{ textAnchor: 'middle', fill: 'green' }}>
-              Load Average
-            </Label>
-          </YAxis>
-          <Line dataKey='load' stroke={'green'} dot={false} />
-        </LineChart>
-      </ResponsiveContainer>
+      <Box
+        sx={{
+          height: '100%',
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Title>CPU Load Monitoring</Title>
+        <ResponsiveContainer aspect={2}>
+          <LineChart data={graphData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis dataKey='time' interval='preserveEnd' stroke={style.axisColor} />
+            <YAxis stroke={style.axisColor}>
+              <Label angle={270} position='left' style={{ textAnchor: 'middle', fill: style.axisColor }}>
+                Load Average
+              </Label>
+            </YAxis>
+            <Tooltip />
+            <Line dataKey='load' stroke={style.lineColor} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </Box>
     </Paper>
   );
 };
