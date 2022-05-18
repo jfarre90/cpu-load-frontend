@@ -2,7 +2,8 @@
   "env": {
     "browser": true,
     "es2021": true,
-    "jest": true
+    "jest": true,
+    "jest/globals": true
   },
   "extends": [
     "eslint:recommended",
@@ -19,7 +20,8 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "jest"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -29,6 +31,10 @@
       {
         "usePrettierrc": true
       }
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error"
     ]
   }
 }
