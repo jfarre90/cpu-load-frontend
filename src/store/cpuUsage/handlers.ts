@@ -45,9 +45,7 @@ const checkAlert = (
   const { currentTime } = action.payload.data;
 
   //* Logic filters the log to only include logs withing the windowTime
-
-  const previousLog = draftState.loadLog.slice(0, draftState.loadLog.length - 1);
-  const alertLogWindow = previousLog.filter((logEntry) => {
+  const alertLogWindow = draftState.loadLog.filter((logEntry) => {
     const milliseconds = duration(unix(currentTime).diff(unix(logEntry.time))).asMilliseconds();
 
     return milliseconds <= windowTime;

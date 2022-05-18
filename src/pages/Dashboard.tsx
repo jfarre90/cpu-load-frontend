@@ -11,6 +11,7 @@ import { generateErrorStateSample } from '../shared/utils/manualTesting';
 import {
   addManualAlert,
   addManualLoadLogs,
+  emptyCurrentLog,
   fetchCpuStatsAsync,
   moveCurrentAlertToLog,
   selectCurrentAlert
@@ -47,16 +48,23 @@ const Dashboard: FC = () => {
   };
 
   const handleAddFakeLoadLogsClick = () => {
+    dispatch(emptyCurrentLog());
     dispatch(addManualLoadLogs(generateErrorStateSample()));
   };
 
   return (
     <MainLayout pageTitle={'Dashboard'}>
       <Box>
-        <Button sx={{ marginBottom: 5 }} color='primary' variant='outlined' onClick={handleTriggerAlertClick}>
+        <Button
+          sx={{ marginBottom: 5, marginRight: 3 }}
+          disabled={!!currentAlert}
+          color='primary'
+          variant='outlined'
+          onClick={handleTriggerAlertClick}
+        >
           Trigger Manual Alert
         </Button>
-        <Button sx={{ marginBottom: 5 }} color='primary' variant='outlined' onClick={handleAddFakeLoadLogsClick}>
+        <Button sx={{ marginBottom: 5 }} color='error' variant='contained' onClick={handleAddFakeLoadLogsClick}>
           Add fake Load Logs
         </Button>
       </Box>

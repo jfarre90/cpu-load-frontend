@@ -38,6 +38,9 @@ export const cpuUsageSlice = createSlice({
     },
     addManualLoadLogs: (state, action: PayloadAction<LogEntry[]>) => {
       state.loadLog.push(...action.payload);
+    },
+    emptyCurrentLog: (state) => {
+      state.loadLog = [];
     }
   },
   extraReducers: (builder) => {
@@ -48,14 +51,14 @@ export const cpuUsageSlice = createSlice({
       .addCase(fetchCpuStatsAsync.fulfilled, (state, action) => {
         state.fetchingStatus = CPU_FETCHING_STATUS.IDLE;
 
-        reduceCoreStatsHandler(state, action);
-
-        reduceLogEntryHandler(state, action);
-
         //* This logic ensures we only look for alerts if we have enough log data
         if (state.loadLog.length > MIN_LOG_ALERT_LENGTH) {
           reduceAlertMonitoringHandler(state, action);
         }
+
+        reduceCoreStatsHandler(state, action);
+
+        reduceLogEntryHandler(state, action);
       })
       .addCase(fetchCpuStatsAsync.rejected, (state) => {
         state.fetchingStatus = CPU_FETCHING_STATUS.FAILED;
@@ -64,7 +67,7 @@ export const cpuUsageSlice = createSlice({
 });
 
 export const cpuUsageReducer = cpuUsageSlice.reducer;
-export const { moveCurrentAlertToLog, addManualAlert, addManualLoadLogs } = cpuUsageSlice.actions;
+export const { moveCurrentAlertToLog, addManualAlert, addManualLoadLogs, emptyCurrentLog } = cpuUsageSlice.actions;
 
 export const selectCurrentUsage = (state: RootState) => state.cpuUsage.currentUsage;
 export const selectCurrentLoadAverage = (state: RootState) => state.cpuUsage.currentLoadAverage;
