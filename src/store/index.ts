@@ -5,7 +5,6 @@ const rootReducer = combineReducers({
   cpuUsage: cpuUsageReducer
 });
 
-// TODO - consider middleware for checking if alarm needs to be triggered for high load
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
