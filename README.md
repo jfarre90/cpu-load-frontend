@@ -2,6 +2,12 @@
 
 Project was initialised with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
 
+## Running instructions
+
+Ensure your node version is >=16.0.0 and npm version is >= 8.0.0.
+
+Once you have installed the dependencies **and the API**, you can start the App with `npm run start`
+
 ## Design Decisions
 
 - The Project was setup with Typescript, Eslint and Prettier to ensure a good code quality accross the app.
