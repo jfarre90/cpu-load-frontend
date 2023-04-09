@@ -25,7 +25,6 @@ const Dashboard: FC = () => {
   const { showNotificationError, showNotificationSuccess } = useNotification();
 
   useEffect(() => {
-    //! initial load renders twice because of strict mode. Would not happen in prod
     dispatch(fetchCpuStatsAsync());
     const interval = setInterval(() => {
       dispatch(fetchCpuStatsAsync());
