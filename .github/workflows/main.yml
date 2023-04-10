@@ -1,0 +1,19 @@
+name: Unit Tests
+run-name: Running test by @${{ github.actor }}
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master]
+
+jobs:
+  Jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Tests
+        run: |
+          npm install --legacy-peer-deps
+          npm test
