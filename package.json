@@ -1,5 +1,5 @@
 {
-  "name": "cpu-load-frontend",
+  "name": "app-frontend",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -22,13 +22,13 @@
     "axios": "^0.27.2",
     "moment": "^2.29.3",
     "notistack": "^2.0.5",
+    "nth-check": "^2.1.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "recharts": "^2.1.9",
-    "typescript": "^4.6.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -74,6 +74,7 @@
     "eslint-plugin-react": "^7.29.4",
     "prettier": "^2.6.2",
     "process": "^0.11.10",
-    "ts-jest": "^28.0.2"
+    "ts-jest": "^28.0.2",
+    "typescript": "^5.0.4"
   }
 }

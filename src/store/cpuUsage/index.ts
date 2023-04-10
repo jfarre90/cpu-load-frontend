@@ -69,6 +69,8 @@ export const cpuUsageSlice = createSlice({
 export const cpuUsageReducer = cpuUsageSlice.reducer;
 export const { moveCurrentAlertToLog, addManualAlert, addManualLoadLogs, emptyCurrentLog } = cpuUsageSlice.actions;
 
+//# Selectors
+
 export const selectCurrentUsage = (state: RootState) => state.cpuUsage.currentUsage;
 export const selectCurrentLoadAverage = (state: RootState) => state.cpuUsage.currentLoadAverage;
 export const selectIsLoading = (state: RootState) => state.cpuUsage.fetchingStatus === CPU_FETCHING_STATUS.FETCHING;
