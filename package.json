@@ -61,7 +61,7 @@
   "devDependencies": {
     "@playwright/test": "^1.32.2",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
-    "@typescript-eslint/parser": "^5.23.0",
+    "@typescript-eslint/parser": "^5.60.0",
     "axios-mock-adapter": "^1.20.0",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.5.0",
